@@ -1,0 +1,201 @@
+#include<iostream>
+using namespace std;
+
+struct node
+{
+    int data;
+    node *L;
+    node *R;
+};
+
+node *root, *temp;
+int count = 0, key;
+
+class bst
+{
+public:
+    void create();
+    void insert(node *, node *);
+    void disin(node *);
+    void search(node *, int);
+    int height(node *);
+    void mirror(node *);
+    void findMin(node *);
+    bst()
+    {
+        root = NULL;
+    }
+};
+
+void bst::create()
+{
+    char ans;
+    do
+    {
+        temp = new node;
+        cout << "Enter the data: ";
+        cin >> temp->data;
+        temp->L = NULL;
+        temp->R = NULL;
+
+        if (root == NULL)
+            root = temp;
+        else
+            insert(root, temp);
+
+        cout << "Do you want to insert more values? (y/n): ";
+        cin >> ans;
+        
+        cout << endl;
+    } while (ans == 'y' || ans == 'Y');
+}
+
+void bst::insert(node *root, node *temp)
+{
+    if (temp->data > root->data)
+    {
+        if (root->R == NULL)
+        {
+            root->R = temp;
+        }
+        else
+        {
+            insert(root->R, temp);
+        }
+    }
+    else
+    {
+        if (root->L == NULL)
+        {
+            root->L = temp;
+        }
+        else
+        {
+            insert(root->L, temp);
+        }
+    }
+}
+
+void bst::disin(node *temp)
+{
+    if (temp != NULL)
+    {
+        disin(temp->L);
+        cout << temp->data << "\t";
+        disin(temp->R);
+    }
+}
+
+void bst::search(node *root, int key)
+{
+    int flag = 0;
+    cout << "\nEnter the key: ";
+    cin >> key;
+    temp = root;
+    while (temp != NULL)
+    {
+        if (key == temp->data)
+        {
+            cout << "KEY FOUND" << endl;
+            flag = 1;
+            break;
+        }
+        if (key > temp->data)
+        {
+            temp = temp->R;
+        }
+        else
+        {
+            temp = temp->L;
+        }
+    }
+    if (flag == 0)
+    {
+        cout << "KEY NOT FOUND" << endl;
+    }
+}
+
+int bst::height(node *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        int leftHeight = height(root->L);
+        int rightHeight = height(root->R);
+        return 1 + max(leftHeight, rightHeight);
+    }
+}
+
+void bst::mirror(node *root)
+{
+    if (root != NULL)
+    {
+        mirror(root->L);
+        mirror(root->R);
+        node *temp = root->L;
+        root->L = root->R;
+        root->R = temp;
+    }
+}
+
+void bst::findMin(node *root)
+{
+    if (root == NULL)
+    {
+        cout << "Tree is empty." << endl;
+    }
+    else
+    {
+        while (root->L != NULL)
+        {
+            root = root->L;
+        }
+        cout << "The minimum element is: " << root->data << endl;
+    }
+}
+
+int main()
+{
+    bst t;
+    int ch;
+    char ans;
+    do
+    {
+        cout << "\n1) Insert new node 2) Number of nodes in the longest path 3) Find minimum element 4) Mirror the tree 5) Search 6) Inorder traversal" << endl;
+        cout << "Enter your choice: ";
+        cin >> ch;
+        switch (ch)
+        {
+        case 1:
+            t.create();
+            break;
+        case 2:
+            cout << "\nNumber of nodes in the longest path: " << t.height(root) << endl;
+            break;
+        case 3:
+            t.findMin(root);
+            break;
+        case 4:
+            t.mirror(root);
+            cout << "\nThe mirror of the tree is: ";
+            t.disin(root);
+            break;
+        case 5:
+            t.search(root, key);
+            break;
+        case 6:
+            cout << "\n***************INORDER TRAVERSAL**************" << endl;
+            t.disin(root);
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+            break;
+        }
+        cout << "\nDo you want to continue? (y/n): ";
+        cin >> ans;
+    } while (ans == 'y' || ans == 'Y');
+    return 0;
+}

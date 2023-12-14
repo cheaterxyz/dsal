@@ -1,0 +1,194 @@
+#include <iostream>
+#include <string>
+using namespace std;
+#define size 10
+
+int hashCode(int num) {
+    return (num % size);
+}
+
+struct dataItem {
+    long long num;
+    string name;  // New field to store the name
+    int pointer;
+    dataItem() 
+    {
+        num = 0;
+        pointer = -1;
+    }
+};
+
+class hash1
+ {
+    dataItem *hashTable[size];
+
+public:
+     hash1(){
+        for (int i = 0; i < size; i++) {
+            hashTable[i] = NULL;
+        }
+     }
+    
+    void insert();
+    void insertt();
+    void search();
+    void Delete();
+    void display();
+};
+
+// Insertion by linear probing
+void hash1::insert() {
+    int n;
+    cout << "Enter number of elements to be entered: ";
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        int numb;
+        string name;  // Added variable to store the name
+        cout << "Enter the mobile number: ";
+        cin >> numb;
+        cout << "Enter the name: ";
+        cin.ignore();  // Ignore the newline character left in the input stream
+        getline(cin, name);
+
+        dataItem *nn = new dataItem();
+        nn->num = numb;
+        nn->name = name;
+        int hashIndex = hashCode(numb);
+
+        while(hashTable[hashIndex] != NULL) {
+            ++hashIndex;
+            hashIndex %= size;
+        }
+              
+        hashTable[hashIndex] = nn;
+        nn->pointer = hashIndex;
+
+    }
+}  
+//insertion by quadreatic probing;
+
+
+    
+void hash1::insertt() {
+    int n;
+    cout << "Enter number of elements to be entered: ";
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        int numb;
+        string name;  // Added variable to store the name
+        cout << "Enter the mobile n";
+        cin >> numb;
+        cout << "Enter the name: ";
+        cin.ignore();  // 
+        getline(cin, name);
+
+        dataItem *nn = new dataItem();
+        nn->num = numb;
+        nn->name = name;
+        int hashIndex = hashCode(numb);
+        int a = 1;
+
+        while (hashTable[hashIndex] != NULL) {
+            hashIndex += (a * a);
+            hashIndex %= size;
+            a++;
+        }
+
+        hashTable[hashIndex] = nn;
+        nn->pointer = hashIndex;
+    }
+}
+
+
+void hash1::search() {
+    int key;
+    cout << "Enter the number to search: ";
+
+
+
+
+    
+    cin >> key;
+    int hashIndex = hashCode(key);
+
+    while (hashTable[hashIndex] != NULL) {
+        if (hashTable[hashIndex]->num == key) {
+            cout << "Found at index " << hashIndex << endl;
+            cout << "Roll Number: " << hashTable[hashIndex]->num << endl;
+            cout << "Name: " << hashTable[hashIndex]->name << endl;
+            return;
+        }
+        ++hashIndex;
+        hashIndex %= size;
+    }
+    cout << "Not Found" << endl;
+}
+
+void hash1::Delete() {
+    int key;
+    cout << "Enter the number to delete: ";
+    cin >> key;
+    int hashIndex = hashCode(key);
+
+    while (hashTable[hashIndex] != NULL) {
+        if (hashTable[hashIndex]->num == key) {
+            hashTable[hashIndex] = NULL;
+            
+            return;
+        }
+        ++hashIndex;
+        hashIndex %= size;
+    }
+    cout << "Not Found!!" << endl;
+}
+
+void hash1::display() {
+    for (int i = 0; i < size; i++) {
+        if (hashTable[i] == NULL) {
+            cout << i << " | " << " empty" << endl;
+        }
+        else {
+            cout << i << " | " << hashTable[i]->num << " - " << hashTable[i]->name << " - " << hashTable[i]->pointer << endl;
+        }
+    }
+}
+
+int main() {
+    int n;
+    
+    hash1 h1;
+    do {
+        int n;
+        cout << "*****" << endl;
+        cout << " 1. Insert (Linear Probing)\n 2. Insert (Quadratic Probing)\n 3. Search\n 4. Delete\n 5. Display\n 6. Exit" << endl;
+        cout << "*****" << endl;
+        cin >> n;
+
+        switch (n) {
+            case 1:
+                h1.insert();
+                break;
+
+            case 2:
+                h1.insertt();
+                break;
+
+            case 3:
+                h1.search();
+                break;
+
+            case 4:
+                h1.Delete();
+                break;
+
+            case 5:
+                h1.display();
+                break;
+
+        }
+    } while (n!=0);
+
+    return 0;
+}

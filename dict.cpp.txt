@@ -1,0 +1,179 @@
+#include<iostream>
+#include<string.h>
+#define max 10 
+using namespace std;
+
+struct dict
+
+{
+    char name[20];
+    int roll;
+    dict* next;
+};
+
+class hash1
+
+{
+    dict d[max];
+    public:
+    hash1()
+
+
+    {
+        for(int i=0;i<max;i++)
+        {
+            strcpy(d[i].name,"NULL");
+            d[i].roll=-1;
+        }
+    }
+    int hashfunction(int);
+    void insert();
+    void display();
+    int search(int);
+    void del(int);
+
+};
+int hash1::hashfunction(int roll)
+{
+    return(roll%10);
+}
+void hash1::insert()
+{
+    char name1[20];
+    int rn;
+    cout<<"Enter name-";
+    cin>>name1;
+    cout<<"Enter roll no -";
+    cin>>rn;
+    
+    int hi=hashfunction(rn);
+     if(d[hi].roll==-1)
+    { 
+        strcpy(d[hi].name,name1);
+        d[hi].roll=rn;
+    }
+    else
+    {
+        int hashkey=hashfunction(d[hi].roll);
+        if(hashkey==hi)
+       {
+           for(int i=hi+1;i<max;i++)
+           {
+               if(d[i].roll==-1)
+               {
+                   d[i].roll=rn;
+                   strcpy(d[i].name,name1);
+                   break;
+                   
+               }
+           }
+          
+          
+          
+       }
+       else
+       {
+           int old_rn;
+           char t[10];
+           int temp;
+           
+          temp=d[hi].roll;
+          strcpy(t,d[hi].name);
+          
+          d[hi].roll=rn;
+          strcpy(d[hi].name,name1);
+      
+          for(int i=hi+1;i<max;i++)
+          {
+              if(d[i].roll==-1)
+              {
+                  d[i].roll=temp;
+                  strcpy(d[i].name,t);
+                  break;
+              }
+          }
+        }
+    }
+          
+}
+
+void hash1::display()
+{
+    int i;
+    for(i=0;i<max;i++)
+    {
+        
+        cout<<i<<"|"<<d[i].name<<"->"<<d[i].roll<<"\n";
+    }
+}
+
+int hash1::search(int rno)
+{
+    for(int i=0;i<max;i++)
+    {
+        if(d[i].roll==rno)
+        {
+            cout<<"Roll no found at "<<i<<" location";
+            return i;
+        }
+    }
+    return-1;
+}
+
+void hash1::del(int rno)
+{
+    int p=search(rno);
+    if(p==-1)
+    {
+        cout<<"Not present";
+    }
+    else
+    {
+        d[p].roll=-1;
+        strcpy(d[p].name,"NULL");
+        cout<<"Record is deleted";
+    }
+    
+}
+
+int main()
+{
+    hash1 h;
+    int ch;
+    int rno;
+ 
+    do
+    {
+   cout<<"1)insert element\n2)display\n3)search\n4)delete\n0)exit";
+   cout<<"\nEnter your choice";
+   cin>>ch;
+   switch(ch)
+   {
+    case 1:
+       h.insert();
+    break;
+    case 2:
+        h.display();
+        break;
+    case 3:
+    {
+        cout<<"Enter the roll no to be searched ";
+        cin>>rno;
+        int p;
+        p=h.search(rno);
+        if(p==-1)
+        {
+            cout<<"Not found";
+        }
+        break;
+    }
+    case 4:
+        cout<<"Enter roll no which you want to delete ";
+        cin>>rno;
+        h.del(rno);
+        break;
+    
+   }
+    }while(ch!=0);
+    return 0; 
+}
